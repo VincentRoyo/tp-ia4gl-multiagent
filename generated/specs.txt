@@ -1,0 +1,81 @@
+Titre : Gestion des tâches de travail quotidien
+
+Contexte métier : 
+L'application doit permettre aux utilisateurs de gérer leurs tâches professionnelles quotidiennes de manière efficace. Cela inclut la création, la consultation, la modification et la suppression de tâches avec des informations essentielles.
+
+Spécifications fonctionnelles :
+
+SF1 : Création de tâche
+- L'utilisateur doit pouvoir créer une nouvelle tâche
+- Chaque tâche doit avoir un titre obligatoire
+- Chaque tâche peut avoir une description optionnelle
+- Chaque tâche doit avoir un statut par défaut "à faire"
+- Le statut doit pouvoir être modifié parmi les options : "à faire", "en cours", "terminé"
+
+SF2 : Listing des tâches
+- L'utilisateur doit pouvoir voir la liste de toutes ses tâches
+- Les tâches doivent être triées par ordre de création (les plus récentes en premier)
+- Le listing doit afficher le titre, le statut et la date de création de chaque tâche
+
+SF3 : Modification de tâche
+- L'utilisateur doit pouvoir modifier une tâche existante
+- L'utilisateur doit pouvoir modifier le titre, la description et le statut d'une tâche
+- L'utilisateur ne peut pas supprimer le titre d'une tâche (champ obligatoire)
+
+SF4 : Suppression de tâche
+- L'utilisateur doit pouvoir supprimer une tâche
+- La suppression doit être confirmée par l'utilisateur
+
+Scénarios métier :
+
+SM1 : Création d'une nouvelle tâche
+1. L'utilisateur accède à l'interface de création de tâche
+2. L'utilisateur saisit un titre pour la tâche
+3. L'utilisateur saisit éventuellement une description
+4. L'utilisateur valide la création
+5. La tâche est créée avec le statut "à faire"
+
+SM2 : Consultation de la liste des tâches
+1. L'utilisateur accède à l'interface de listing des tâches
+2. L'utilisateur voit la liste de toutes ses tâches
+3. Pour chaque tâche, l'utilisateur voit le titre, le statut et la date de création
+
+SM3 : Modification d'une tâche existante
+1. L'utilisateur accède à l'interface de modification d'une tâche spécifique
+2. L'utilisateur modifie le titre, la description et/ou le statut
+3. L'utilisateur valide les modifications
+4. La tâche est mise à jour avec les nouvelles informations
+
+SM4 : Suppression d'une tâche
+1. L'utilisateur accède à l'interface de suppression d'une tâche spécifique
+2. L'utilisateur confirme la suppression
+3. La tâche est supprimée de la liste des tâches
+
+Critères d'acceptation :
+
+CA1 : Création de tâche
+Given que je suis sur la page de création de tâche
+When je saisis un titre et je valide
+Then une nouvelle tâche est créée avec le statut "à faire"
+
+CA2 : Listing des tâches
+Given que je suis sur la page de listing des tâches
+When la page se charge
+Then je vois la liste de toutes mes tâches avec leur titre, statut et date de création
+
+CA3 : Modification de tâche
+Given que je suis sur la page de modification d'une tâche
+When je modifie le titre, la description et/ou le statut et je valide
+Then la tâche est mise à jour avec les nouvelles informations
+
+CA4 : Suppression de tâche
+Given que je suis sur la page de suppression d'une tâche
+When je confirme la suppression
+Then la tâche est supprimée de la liste des tâches
+
+Questions / clarifications :
+- Quelle est la longueur maximale du titre et de la description ?
+- Faut-il implémenter un système de priorité pour les tâches ?
+- Comment gérer les tâches récurrentes ?
+- Faut-il ajouter des dates d'échéance aux tâches ?
+- Quel doit être le comportement en cas de conflit lors de la modification simultanée d'une tâche ?

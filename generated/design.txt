@@ -1,0 +1,137 @@
+### Design du Système de Gestion de Tâches
+
+#### 1) Vue d'ensemble
+
+Le système de gestion de tâches permet aux utilisateurs de créer, consulter, mettre à jour et supprimer des tâches. Chaque tâche possède un titre obligatoire, une description optionnelle et un statut (à faire, en cours, terminé).
+
+- **Principaux composants** :
+  - `TaskRepository`: Gère la persistance des tâches.
+  - `TaskService`: Contient la logique métier pour la gestion des tâches.
+  - `TaskController`: Gère les interactions avec l'utilisateur.
+
+#### 2) Responsabilités par composant
+
+- **TaskRepository**
+  - Responsabilités :
+    - Enregistrer, récupérer, mettre à jour et supprimer des tâches.
+  - Dépendances : Aucune.
+
+- **TaskService**
+  - Responsabilités :
+    - Créer, lire, mettre à jour et supprimer des tâches.
+    - Valider les données des tâches.
+  - Dépendances : `TaskRepository`.
+
+- **TaskController**
+  - Responsabilités :
+    - Interagir avec l'utilisateur pour créer, lire, mettre à jour et supprimer des tâches.
+  - Dépendances : `TaskService`.
+
+#### 3) Interfaces et fonctions
+
+- **TaskRepository**
+  - `add_task(task)` :
+    - Rôle : Ajoute une tâche à la base de données.
+    - Paramètres : `task` (objet tâche).
+    - Retourne : `None`.
+  - `get_tasks()` :
+    - Rôle : Récupère toutes les tâches.
+    - Paramètres : `None`.
+    - Retourne : `list[Task]`.
+  - `get_task(task_id)` :
+    - Rôle : Récupère une tâche spécifique.
+    - Paramètres : `task_id` (identifiant de la tâche).
+    - Retourne : `Task`.
+  - `update_task(task_id, task)` :
+    - Rôle : Met à jour une tâche.
+    - Paramètres : `task_id` (identifiant de la tâche), `task` (objet tâche).
+    - Retourne : `None`.
+  - `delete_task(task_id)` :
+    - Rôle : Supprime une tâche.
+    - Paramètres : `task_id` (identifiant de la tâche).
+    - Retourne : `None`.
+
+- **TaskService**
+  - `create_task(title, description)` :
+    - Rôle : Crée une nouvelle tâche.
+    - Paramètres : `title` (titre de la tâche), `description` (description de la tâche).
+    - Retourne : `Task`.
+  - `get_all_tasks()` :
+    - Rôle : Récupère toutes les tâches.
+    - Paramètres : `None`.
+    - Retourne : `list[Task]`.
+  - `get_task_details(task_id)` :
+    - Rôle : Récupère les détails d'une tâche.
+    - Paramètres : `task_id` (identifiant de la tâche).
+    - Retourne : `Task`.
+  - `update_task(task_id, title, description, status)` :
+    - Rôle : Met à jour une tâche.
+    - Paramètres : `task_id` (identifiant de la tâche), `title` (titre de la tâche), `description` (description de la tâche), `status` (statut de la tâche).
+    - Retourne : `Task`.
+  - `delete_task(task_id)` :
+    - Rôle : Supprime une tâche.
+    - Paramètres : `task_id` (identifiant de la tâche).
+    - Retourne : `None`.
+
+- **TaskController**
+  - `create_task(title, description)` :
+    - Rôle : Interagit avec l'utilisateur pour créer une tâche.
+    - Paramètres : `title` (titre de la tâche), `description` (description de la tâche).
+    - Retourne : `Task`.
+  - `list_tasks()` :
+    - Rôle : Interagit avec l'utilisateur pour lister toutes les tâches.
+    - Paramètres : `None`.
+    - Retourne : `list[Task]`.
+  - `get_task(task_id)` :
+    - Rôle : Interagit avec l'utilisateur pour récupérer les détails d'une tâche.
+    - Paramètres : `task_id` (identifiant de la tâche).
+    - Retourne : `Task`.
+  - `update_task(task_id, title, description, status)` :
+    - Rôle : Interagit avec l'utilisateur pour mettre à jour une tâche.
+    - Paramètres : `task_id` (identifiant de la tâche), `title` (titre de la tâche), `description` (description de la tâche), `status` (statut de la tâche).
+    - Retourne : `Task`.
+  - `delete_task(task_id)` :
+    - Rôle : Interagit avec l'utilisateur pour supprimer une tâche.
+    - Paramètres : `task_id` (identifiant de la tâche).
+    - Retourne : `None`.
+
+#### 4) Flux d'exécution principal
+
+1. **Création de Tâche**
+   - Utilisateur appelle `TaskController.create_task(title, description)`.
+   - `TaskController` appelle `TaskService.create_task(title, description)`.
+   - `TaskService` crée une tâche avec le statut par défaut "à faire" et appelle `TaskRepository.add_task(task)`.
+   - `TaskRepository` enregistre la tâche.
+   - `TaskService` retourne la tâche créée à `TaskController`.
+   - `TaskController` retourne la tâche à l'utilisateur.
+
+2. **Consultation de Tâches**
+   - Utilisateur appelle `TaskController.list_tasks()`.
+   - `TaskController` appelle `TaskService.get_all_tasks()`.
+   - `TaskService` appelle `TaskRepository.get_tasks()`.
+   - `TaskRepository` retourne la liste des tâches.
+   - `TaskService` retourne la liste des tâches à `TaskController`.
+   - `TaskController` retourne la liste des tâches à l'utilisateur.
+
+3. **Mise à Jour de Tâche**
+   - Utilisateur appelle `TaskController.update_task(task_id, title, description, status)`.
+   - `TaskController` appelle `TaskService.update_task(task_id, title, description, status)`.
+   - `TaskService` met à jour la tâche et appelle `TaskRepository.update_task(task_id, task)`.
+   - `TaskRepository` met à jour la tâche.
+   - `TaskService` retourne la tâche mise à jour à `TaskController`.
+   - `TaskController` retourne la tâche mise à jour à l'utilisateur.
+
+4. **Suppression de Tâche**
+   - Utilisateur appelle `TaskController.delete_task(task_id)`.
+   - `TaskController` appelle `TaskService.delete_task(task_id)`.
+   - `TaskService` appelle `TaskRepository.delete_task(task_id)`.
+   - `TaskRepository` supprime la tâche.
+   - `TaskService` confirme la suppression à `TaskController`.
+   - `TaskController` confirme la suppression à l'utilisateur.
+
+#### 5) Hypothèses / contraintes techniques
+
+- Langage : Python.
+- Style d'implémentation simple (fonctions ou petites classes).
+- Utilisation d'une base de données simple pour la persistance des tâches.
+

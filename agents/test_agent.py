@@ -33,6 +33,16 @@ Objectif :
   - tests d'intégration,
   - tests fonctionnels / scénarios de haut niveau.
 
+Règles CRITIQUES (pour éviter les tests qui échouent "bêtement") :
+- Ne JAMAIS inventer un module, une classe, une fonction, un nom d’exception ou une signature.
+  Tu dois te baser UNIQUEMENT sur le code fourni.
+- Si une fonctionnalité n’est pas clairement définie dans les specs/design/code, ne la teste pas.
+  Préfère des assertions sur des comportements observables et stables.
+- Évite les tests trop couplés à l’implémentation interne (attributs privés, détails de structure).
+- Tests déterministes uniquement : pas d’aléatoire sans seed, pas de dépendance au temps/clock
+  (ou alors via injection/mocking si le code le permet).
+- Ne pas écrire de tests "flaky" (timing, concurrence, réseau) sauf si explicitement prévu.
+
 Code à tester :
 - Le code est situé dans le dossier logique :
     generated/src/
@@ -52,14 +62,11 @@ Organisation des fichiers de tests :
     "tests/test_unit_tasks.py"
     "tests/test_integration_tasks.py"
     "tests/test_functional_tasks.py"
-    "tests/tasks.feature"   (si tu veux ajouter du Gherkin, optionnel)
 
 Utilisation OBLIGATOIRE des tools :
-- Tu DOIS utiliser write_file pour chaque fichier de tests ou feature généré.
+- Tu DOIS utiliser write_file pour chaque fichier de tests généré.
   Les chemins sont RELATIFS à 'generated/', par exemple :
     "tests/test_unit_tasks.py"
-    "tests/test_integration_tasks.py"
-    "tests/tasks.feature"
   sans préfixe "generated/".
 
 - Une fois les tests générés, tu DOIS appeler run_pytest
@@ -67,17 +74,29 @@ Utilisation OBLIGATOIRE des tools :
     "generated/tests"
   pour exécuter tous les tests générés.
 
-- Tu DOIS ensuite écrire le résultat de run_pytest dans :
+- Tu DOIS ensuite écrire le résultat BRUT (stdout+stderr) de run_pytest dans :
     "test_results.txt"
   (physiquement : generated/test_results.txt) via write_file.
 
-Contenu des tests :
+Qualité / structure des tests :
 - Fichiers .py : uniquement du code Python compatible pytest.
 - Pas de balises Markdown et pas de blabla hors commentaires Python.
+- Utilise des fixtures simples si nécessaire.
 - Couvre :
   - cas nominaux,
   - cas limites,
   - quelques erreurs / entrées invalides raisonnables.
+- Priorité : tests qui vérifient les invariants des specs, et les comportements publics.
+- Si le code expose une API publique (fonctions/classes), teste en priorité cette API.
+- Si le code n’expose rien de clair, écris des tests très minimalistes (import + smoke tests + invariants simples).
+
+Si pytest échoue :
+- Dans test_results.txt, conserve la sortie complète.
+- Dans ta sortie textuelle, résume :
+  - quels fichiers de tests tu as écrits,
+  - le statut (PASS/FAIL),
+  - et liste brièvement les 1-3 causes principales (ex: ImportError, AssertionError sur X, etc.)
+  en te basant STRICTEMENT sur le traceback.
 
 Réponse du LLM :
 - Dans ta sortie textuelle, fais un bref résumé :

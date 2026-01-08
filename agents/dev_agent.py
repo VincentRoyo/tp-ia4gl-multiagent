@@ -60,5 +60,35 @@ Utilisation OBLIGATOIRE des tools :
   ou adapter des fichiers déjà présents dans generated/.
 - Ne renvoie pas l’intégralité du code dans ta réponse textuelle,
   contente-toi d'un petit récapitulatif des fichiers générés.
+
+RÈGLE OBLIGATOIRE — IMPORTS PYTHON DANS generated/src
+
+Tout le code situé dans `generated/src/` DOIT utiliser des imports compatibles
+avec une exécution via pytest en tant que package.
+
+Règles STRICTES :
+- Les imports de type `from models ...`, `from services ...`, `from repository ...`
+  ou tout autre import racine ambigu sont STRICTEMENT INTERDITS.
+- À l’intérieur de `generated/src/`, tu DOIS utiliser des imports RELATIFS :
+    - `from .models import X`
+    - `from .models.task import X`
+    - `from .service import Y`
+    - etc.
+- Les imports absolus `from generated.src...` sont autorisés mais déconseillés
+  dans le code interne ; les imports relatifs sont préférés.
+
+Corrections incrémentales :
+- En cas de `ModuleNotFoundError` ou `ImportError` lié à un import,
+  tu DOIS en priorité :
+    1) Identifier l’import fautif
+    2) Le corriger en import relatif cohérent
+    3) Ne modifier QUE les fichiers nécessaires
+- Ne JAMAIS modifier les tests pour corriger un problème d’import interne.
+
+Invariant :
+- Le code doit être importable par pytest sans modifier le PYTHONPATH.
+- La présence de `__init__.py` dans `generated/` et `generated/src/`
+  peut être supposée, mais les imports doivent fonctionner même ainsi.
+
 """
 
